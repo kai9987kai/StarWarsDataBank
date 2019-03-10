@@ -9,11 +9,10 @@ main_api = 'https://swapi.co/api/people/' + str(random1) + '/?format=json'
 url = main_api
 json_data = requests.get(url).json()
 window = Tk()
-window.iconbitmap('favicon.ico')
 window.attributes("-topmost", True)
 window.resizable(False, False)
 window.geometry("+500+200")
-
+window.iconbitmap('favicon.ico')
 lbl = Label(window, text="Name:")
 lbl3 = Label(window, text="Height:")
 lbl6 = Label(window, text="Mass:")
@@ -59,6 +58,23 @@ def new12():
     lbl12.configure(text=json_data["eye_color"])
     lbl13.configure(text=json_data["birth_year"])
     lbl15.configure(text=json_data["gender"])
-ttk.Button(window, text="NEW", command=new12).grid(row=9, column=0, columnspan=2)
+def exit():
+    window.destroy()
+ttk.Button(window, text="NEW", command=new12).grid(row=9, column=1)
+ttk.Button(window, text="EXIT", command=exit).grid(row=9, column=2)
+# create a menu
+popup = Menu(window, tearoff=0)
+popup.add_command(label="New", command= new12) # , command=next) etc...
+popup.add_command(label="Exit", command = exit)
 
+
+def do_popup(event):
+    # display the popup menu
+    try:
+        popup.tk_popup(event.x_root, event.y_root, 0)
+    finally:
+        # make sure to release the grab (Tk 8.0a1 only)
+        popup.grab_release()
+
+window.bind("<Button-3>", do_popup)
 window.mainloop()
